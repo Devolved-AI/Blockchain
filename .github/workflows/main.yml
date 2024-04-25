@@ -1,8 +1,10 @@
 name: Update CHANGELOG
+
 on:
   push:
     branches:
       - main
+
 jobs:
   update-changelog:
     runs-on: ubuntu-latest
@@ -10,16 +12,6 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v2
 
-      - name: Get changes
+      - name: Update CHANGELOG
         run: |
-          changes=$(git log --format=%s)
-          if [ -z "$changes" ]; then
-            echo "No changes found. Skipping update."
-          else
-            echo "Changes:"
-            echo "$changes" >> CHANGELOG
-          fi
-
-      - name: Commit CHANGELOG (if changes were found)
-        if: $changes != ""
-        run: git add CHANGELOG && git commit -m "Update CHANGELOG"
+          git log --format=%s > CHANGELOG.md
