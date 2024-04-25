@@ -1,10 +1,8 @@
 name: Update CHANGELOG
-
 on:
   push:
     branches:
       - main
-
 jobs:
   update-changelog:
     runs-on: ubuntu-latest
@@ -15,8 +13,13 @@ jobs:
       - name: Get changes
         run: |
           changes=$(git log --format=%s)
-          echo "Changes:"
-          echo "$changes" >> CHANGELOG
+          if [ -z "$changes" ]; then
+            echo "No changes found. Skipping update."
+          else
+            echo "Changes:"
+            echo "$changes" >> CHANGELOG
+          fi
 
-      - name: Commit CHANGELOG
+      - name: Commit CHANGELOG (if changes were found)
+        if: $changes != ""
         run: git add CHANGELOG && git commit -m "Update CHANGELOG"
